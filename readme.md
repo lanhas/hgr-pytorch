@@ -14,7 +14,8 @@ This is a pytorch deep learning project that recognizes 9 kinds of hands command
 下载地址：
 
 [Nutstore 坚果云](https://www.jianguoyun.com/p/DQrBFs8QjpCuCRjOoOsD )
-[百度网盘](链接：https://pan.baidu.com/s/1b72F7haVz_-d6SnzYUVJfA 提取码：rxm6)
+
+[百度网盘](https://pan.baidu.com/s/1b72F7haVz_-d6SnzYUVJfA )提取码：rxm6
 
 放置在:
 
@@ -29,7 +30,8 @@ hgr-pytorch/generated
 动态手势数据集下载：
 
 [Nutstore 坚果云](https://www.jianguoyun.com/p/Dc1XE3EQiZCuCRjIoOsD )
-[百度网盘](链接：https://pan.baidu.com/s/1SidRUUrKcUl_L1qfvxTN3Q 提取码：sq2h )
+
+[百度网盘](https://pan.baidu.com/s/1SidRUUrKcUl_L1qfvxTN3Q )提取码：rxm6
 
 放置在：
 ```
