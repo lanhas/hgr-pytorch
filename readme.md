@@ -1,8 +1,6 @@
 # 动态手势识别及控制系统
 This is a pytorch deep learning project that recognizes 9 kinds of hands commanding gestures.
 
-**[English Readme](readme.en.md)**
-
 识别9种基本手势的Pytorch深度学习项目
 
 <p align="center">
