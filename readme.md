@@ -25,13 +25,13 @@ hgr-pytorch/generated
 ```
 
 
-### 下载手势数据集（必选）和AI Challenger数据集（可选）
+### 下载手势数据集（必选）
 
 动态手势数据集下载：
 
 [Nutstore 坚果云](https://www.jianguoyun.com/p/Dc1XE3EQiZCuCRjIoOsD )
 
-[百度网盘](https://pan.baidu.com/s/1SidRUUrKcUl_L1qfvxTN3Q )  提取码：rxm6
+[百度网盘](https://pan.baidu.com/s/1DFJNiXyye12AHnofO10saQ )  提取码：n6b3
 
 放置在：
 ```
