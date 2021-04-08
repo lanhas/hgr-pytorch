@@ -9,7 +9,7 @@ class HandsRecognitionModel(nn.Module):
     def __init__(self, batch):
         super().__init__()
         num_input = len(hand_bones) + 2 * len(hand_bone_pairs) + 21
-        self.num_hidden = 30
+        self.num_hidden = 27
         self.num_output = 10
         self.batch = batch
         self.rnn = LSTM(input_size=num_input, hidden_size=self.num_hidden)
@@ -26,10 +26,7 @@ class HandsRecognitionModel(nn.Module):
 
     def load_ckpt(self, allow_new=True):
         if Path.is_file(self.ckpt_path):
-            if torch.cuda.is_available() is True:
-                checkpoint = torch.load(self.ckpt_path)
-            else:
-                checkpoint = torch.load(self.ckpt_path, map_location='cpu')
+            checkpoint = torch.load(self.ckpt_path)
             self.load_state_dict(checkpoint)
         else:
             if allow_new:
