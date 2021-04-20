@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from pathlib import Path
 from hgdataset.s2_truncate import HgdTruncate
 from constants.enum_keys import HG
@@ -47,7 +46,7 @@ class BoneLengthAngle:
         xy_coord = np.asarray(coord)
         xy_val = np.take(xy_coord, self.pairs, axis=2)
         xy_vec = xy_val[:, :, :, : ,1] - xy_val[:, :, :, :, 0]
-        ax = xy_vec[: ,0, :, 0]
+        ax = xy_vec[:, 0, :, 0]
         bx = xy_vec[:, 0, :, 1]
         ay = xy_vec[:, 1, :, 0]
         by = xy_vec[:, 1, :, 1]

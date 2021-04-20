@@ -6,13 +6,14 @@ from hgdataset.s1_skeleton import HgdSkeleton
 from imgaug import KeypointsOnImage
 from imgaug.imgaug import draw_text
 from utils.resize import ResizeKeepRatio
-
-from PyQt5.QtCore import QObject,pyqtSignal,Qt
+from PyQt5.QtCore import QObject,pyqtSignal
 import pred.hands_pred
 from pathlib import Path
 
+
 class Player(QObject):
     hands_singal = pyqtSignal(int)
+
     def __init__(self, is_unittest=False):
         super(QObject, self).__init__()
         self.img_size = (512, 512)
@@ -27,7 +28,6 @@ class Player(QObject):
         coord_norm_FXJ = res[HG.COORD]  # Shape: F,X,J
         coord_norm_FXJ = coord_norm_FXJ[:, :, :]
         coord_norm_FXJ2 = coord_norm_FXJ[:, :2, :]
-
         coord_norm_FJX2 = np.transpose(coord_norm_FXJ2, (0, 2, 1))  # FJX
         coord = coord_norm_FJX2 * np.array(self.img_size)
         img_shape = self.img_size[::-1] + (3,)
@@ -36,7 +36,7 @@ class Player(QObject):
         cap = cv2.VideoCapture(str(res[HG.VIDEO_PATH]))
         v_size = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         v_fps = int(cap.get(cv2.CAP_PROP_FPS))
-        duration = int(1000/(v_fps*4))
+        duration = int(1000/(v_fps*3))
         hands = []
         for n in range(v_size):
             hdict = self.hpred.from_skeleton(coord_norm_FXJ[n][np.newaxis])
@@ -90,7 +90,7 @@ class Player(QObject):
                 hands_now = hands
                 send_flag = False
             
-            if hands_continue > 10 and send_flag==False:
+            if hands_continue > 2 and send_flag==False:
                 self.hands_singal.emit(hands_now)
                 send_flag = True
             
@@ -112,7 +112,6 @@ class Player(QObject):
                 break
         cap.release()
 
-    
     hands_dict = {
         0: "NO SINGAL",
         1: "TORCH",
@@ -136,6 +135,3 @@ class Player(QObject):
         7: "抓取",
         8: "返回",
         9: "截屏"}
-
-
-

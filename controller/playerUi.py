@@ -6,7 +6,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -110,8 +111,8 @@ class Ui_MainWindow(object):
         self.menu.setTitle(_translate("MainWindow", "视图"))
         self.menu_2.setTitle(_translate("MainWindow", "帮助"))
         self.actionswitchCamera.setText(_translate("MainWindow", "显示/隐藏摄像头"))
-        self.action_openDir.setText(_translate("MainWindow", "打开文件"))
-        self.action_openImg.setText(_translate("MainWindow", "打开图片"))
+        self.action_openDir.setText(_translate("MainWindow", "打开文件夹"))
+        self.action_openImg.setText(_translate("MainWindow", "打开文件(*.pptx)"))
         self.actiontorch.setText(_translate("MainWindow", "确认"))
         self.actionrotate.setText(_translate("MainWindow", "旋转内容"))
         self.actionmove_left.setText(_translate("MainWindow", "上一页"))

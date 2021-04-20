@@ -1,29 +1,52 @@
 from pathlib import Path
+import datetime
 import numpy as np
 from itertools import groupby
 from constants.enum_keys import HG
 from hgdataset.s0_label import HgdLabel
-from torch.utils.data import DataLoader
 from pred.play_hands_results import Player
 
 
 class Eval:
     def __init__(self):
         self.player = Player()
+        models_dir = Path.cwd() / 'checkpoints'
+        self.models_path = models_dir.iterdir()
         self.num_video = len(HgdLabel(Path.home() / 'MeetingHands', is_train=False))
         self.ed = EditDistance()
 
     def main(self):
-        for n in range(self.num_video):
-            res = self.player.play_dataset_video(is_train=False, video_index=n, show=False)
-            target = res[HG.GESTURE_LABEL]
-            source = res[HG.PRED_GESTURE]
-            assert len(source) == len(target)
-            source_group = [k for k, g in groupby(source)]
-            target_group = [k for k, g in groupby(target)]
-            S, D, I = self.ed.edit_distance(source_group, target_group)
-            print('S:%d, D:%d, I:%d'%(S, D, I))
-            pass
+        file_handle = open('./docs/train_log/trainLog.txt', mode='a+')
+        file_handle.writelines([
+        '*---------------------------------------------------------------------------------------------------------------------------------*\n',
+        '*--------------------------------------------------------- 训练日志 ---------------------------------------------------------------*\n',
+        '训练日期： ' + str(datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d %H:%M:%S')) +'\n',
+            ])
+        for idx, val in enumerate(self.models_path):
+            print('*------------------------------------------------*')
+            print('The prediction of model %s' %(val.name))
+            file_handle.writelines([
+            '*------------------------------------------------*\n'
+            'The prediction of model %s\n' %(val.name),
+            ])
+            self.player.hpred.h_model.ckpt_path = Path(val)
+            self.player.hpred.h_model.load_ckpt()
+            self.sumDistence = [0, 0, 0, 0]
+            for n in range(self.num_video):
+                res = self.player.play_dataset_video(is_train=False, video_index=n, show=False)
+                target = res[HG.GESTURE_LABEL]
+                source = res[HG.PRED_GESTURE]
+                (N, S, D, I), accuracy, self.sumDistence = self.ed.getAccuracy(source, target, self.sumDistence)
+                print('N:%d, S:%d, D:%d, I:%d, accuracy:%.2f' %(N, S, D, I, accuracy))
+                file_handle.writelines(['N:%d, S:%d, D:%d, I:%d, accuracy:%.2f\n' %(N, S, D, I, accuracy)])
+                pass
+            sum_accuracy = (self.sumDistence[0] - self.sumDistence[1] - self.sumDistence[2] - self.sumDistence[3]) / self.sumDistence[0]
+            print("The predict of sum is completed")
+            print('N:%d, S:%d, D:%d, I:%d, accuracy:%.2f' %(self.sumDistence[0], self.sumDistence[1], self.sumDistence[2], self.sumDistence[3], sum_accuracy))
+            file_handle.writelines([
+            "The predict of sum is completed\n",
+            'N:%d, S:%d, D:%d, I:%d, accuracy:%.2f\n' %(self.sumDistence[0], self.sumDistence[1], self.sumDistence[2], self.sumDistence[3], sum_accuracy)
+            ])
 
 
 class EditDistance:
@@ -32,8 +55,22 @@ class EditDistance:
         # Wrapper for __edit_distance with empty stack
         word1 = tuple(word1)
         word2 = tuple(word2)
+        # target gesture num N
+        N = len(list(filter(lambda x: x % 100 != 0, word2)))
         # tuple contains (S,D,I) for times of substitute, delete, insert
-        return self.__edit_distance(word1, word2, {})
+        return N, self.__edit_distance(word1, word2, {})
+
+    def getAccuracy(self, source: list, target: list, sumDistence: list):
+        assert len(source) == len(target)
+        source_group = [k for k, g in groupby(source)]
+        target_group = [k for k, g in groupby(target)]
+        N, (S, D, I) = self.edit_distance(source_group, target_group)
+        sumDistence[0]+= N
+        sumDistence[1]+= S
+        sumDistence[2]+= D
+        sumDistence[3]+= I
+        accuracy = (N - S - D - I) / N
+        return (N, S, D, I), accuracy, sumDistence
 
     def __edit_distance(self, word1, word2, computed_solutions):
         # computed_solutions: dict{ tuple of word(w1,w2), tuple of integer(S,D,I)}
@@ -99,7 +136,6 @@ class EditDistance:
         :param dis2:
         :return:
         """
-
         d1_total = dis1[0] + dis1[1] + dis1[2]
         d2_total = dis2[0] + dis2[1] + dis2[2]
         d3_total = dis3[0] + dis3[1] + dis3[2]

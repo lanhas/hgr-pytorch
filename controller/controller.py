@@ -3,11 +3,11 @@
 '''
 from controller.windows import *
 
+
 class Controller:
     def __init__(self):
         pass
 
-    #To show the mainwindow
     def showMain(self):
         self.main = mainDecoration()
         self.main.setWindowTitle('手势识别及控制系统')
@@ -22,7 +22,5 @@ class Controller:
         self.operate.show()
         self.operate.play_hands()
 
-if __name__ == "__main__":
-    con = Controller()
 
 

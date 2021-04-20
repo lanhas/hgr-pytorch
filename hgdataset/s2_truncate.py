@@ -2,14 +2,14 @@ from pathlib import Path
 from constants.enum_keys import HG
 from numpy import random
 import numpy as np
-
 from hgdataset.s1_skeleton import HgdSkeleton
+
 
 class HgdTruncate(HgdSkeleton):
     def __init__(self, data_path: Path, is_train: bool, resize_img_size: tuple, clip_len: int):
         super().__init__(data_path, is_train, resize_img_size)
         self.clip_len = clip_len
-        self.LABEL_DELAY = 15 # LABEL_DELAY frames are delayed to leave some time for RNN to observe the gesture
+        self.LABEL_DELAY = 7 # LABEL_DELAY frames are delayed to leave some time for RNN to observe the gesture
 
     def __getitem__(self, index):
         res_dict = super().__getitem__(index)

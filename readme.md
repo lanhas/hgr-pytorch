@@ -1,8 +1,6 @@
 # 动态手势识别及控制系统
 This is a pytorch deep learning project that recognizes 9 kinds of hands commanding gestures.
 
-**[English Readme](readme.en.md)**
-
 识别9种基本手势的Pytorch深度学习项目
 
 <p align="center">
@@ -16,7 +14,8 @@ This is a pytorch deep learning project that recognizes 9 kinds of hands command
 下载地址：
 
 [Nutstore 坚果云](https://www.jianguoyun.com/p/DQrBFs8QjpCuCRjOoOsD )
-[百度网盘](链接：https://pan.baidu.com/s/1b72F7haVz_-d6SnzYUVJfA 提取码：rxm6)
+
+[百度网盘](https://pan.baidu.com/s/1YOuGTDUlzsr9DypBevch9A )  提取码：06ek
 
 放置在:
 
@@ -26,12 +25,13 @@ hgr-pytorch/generated
 ```
 
 
-### 下载手势数据集（必选）和AI Challenger数据集（可选）
+### 下载手势数据集（必选）
 
 动态手势数据集下载：
 
 [Nutstore 坚果云](https://www.jianguoyun.com/p/Dc1XE3EQiZCuCRjIoOsD )
-[百度网盘](链接：https://pan.baidu.com/s/1SidRUUrKcUl_L1qfvxTN3Q 提取码：sq2h )
+
+[百度网盘](https://pan.baidu.com/s/1QyrOQn4GRVV2or5_D5iaYQ )  提取码：eyty
 
 放置在：
 ```
@@ -46,13 +46,13 @@ hgr-pytorch/generated
 conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=10.2 -c pytorch
 pip install pyqt5
 pip install mediapipe
-pip install visdom opencv-python imgaug pillow
+pip install visdom opencv-python imgaug pillow pywin32
 ```
 
 ## 使用
 ```bash
 # 使用gui控制系统
-python hgr_gui.py
+python main.py
 
 # 识别自定义视频文件 
 python hgr.py -p C:\*.mp4

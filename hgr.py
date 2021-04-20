@@ -1,3 +1,5 @@
+import sys
+sys.path.append(r'F:\code\copy\hgr-pytorch')
 import argparse
 from pathlib import Path
 import hgdataset.s1_skeleton
@@ -5,6 +7,7 @@ import train.train_hands_gesture_model
 import pred.prepare_skeleton_from_video
 import pred.play_hands_results
 import pred.evaluation
+
 
 def prepare_skeleton():
     pred.prepare_skeleton_from_video.save()

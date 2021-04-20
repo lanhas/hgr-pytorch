@@ -25,8 +25,9 @@ class MainWindowLabel(QMainWindow):
         cap = cv2.VideoCapture(fileName)
 
         while cap.isOpened():
+
             ret, frame = cap.read()
-            if self.ishands_flag and self.show_delay > 21:
+            if self.ishands_flag and self.show_delay > 25:
                 self.hands_flag = 0
                 self.ishands_flag = False
             if ret:
@@ -37,7 +38,10 @@ class MainWindowLabel(QMainWindow):
                 print("视频播放完成！")
                 break
 
-            key = cv2.waitKey(100)
+            key = cv2.waitKey(0)
+            if key == 32:
+                key = cv2.waitKey(50)
+                continue
             if key == 27:
                 break
 
@@ -96,7 +100,10 @@ class MainWindowLabel(QMainWindow):
         self.show_delay = 0
 
     def pause(self):
-        pass
+        self.hands_flag = 0
+        self.ishands_flag = False
+        self.show_delay = 0
+
 
 
 app = QApplication(sys.argv)

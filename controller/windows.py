@@ -1,11 +1,11 @@
+import os
 import cv2
-import sys
 import time
-import numpy as np
+import win32com.client
 from PIL import ImageGrab
 from pathlib import Path
 import PyQt5.QtWidgets as QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsScene, QGraphicsPixmapItem, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QGraphicsScene, QGraphicsPixmapItem, QFileDialog
 from PyQt5.QtGui import QImage, QPixmap
 from controller.mainUi import Ui_MainWindow as mainWindow
 from controller.playerUi import Ui_MainWindow as operateWindow
@@ -54,13 +54,15 @@ class mainDecoration(QMainWindow, mainWindow):
                   "选取文件夹",
                   str(Path.home()))
         self.imgs = Path(imgDir).iterdir()
-        for i, v in enumerate(self.imgs):
-            print(v)
 
     # open the carema
     def test(self):
         pl = Player()
         pl.play_custom_video(None)
+    
+    def standby(self):
+        pass
+
 
 
 class PictureOperation(MyMainWindow, operateWindow):
@@ -105,11 +107,46 @@ class PictureOperation(MyMainWindow, operateWindow):
         self.scene.addItem(self.item)
         self.graphicsView.setScene(self.scene)                                #将场景添加至视图
 
+    def openDir(self):
+        self.imgs_path = []
+        self.hands_player.show_camera = False
+        imgDir = QFileDialog.getExistingDirectory(self,
+                  "选取文件夹",
+                  str(Path.home() / 'Pictures'))
+        files = Path(imgDir).iterdir()
+        for i,v in enumerate(files):
+            self.imgs_path.append(str(v))
+        self.img = cv2.imread(self.imgs_path[0])
+        self.updateImg()
+
     def openImg(self):
-        pass
-    
+        self.imgs_path = []
+        ppt_path, filetype = QFileDialog.getOpenFileName(self,  
+                                    "选取文件",  
+                                    str(Path.home() / 'Pictures'), # 起始路径 
+                                    "ppt Files (*.pptx);;All Files (*)")
+        output_path = Path.cwd() / 'docs' / 'imgsCache'
+
+        files = Path(output_path).iterdir()
+        for i,v in enumerate(files):
+            v.unlink()
+        if Path(ppt_path).exists():
+            ppt_app = win32com.client.Dispatch('PowerPoint.Application')
+            ppt = ppt_app.Presentations.Open(ppt_path)  # 打开 ppt
+            ppt.SaveAs(output_path, 17)  # 17数字是转为 ppt 转为图片
+            ppt_app.Quit()  # 关闭资源，退出
+        else:
+            raise Exception('请检查文件是否存在！\n')
+        
+        files = Path(output_path).iterdir()
+        for i,v in enumerate(files):
+            new_name = v.with_name(str(i) + '.jpg')
+            os.rename(str(v), new_name)
+            self.imgs_path.append(str(new_name))
+        self.img = cv2.imread(self.imgs_path[0])
+        self.updateImg()
+
     def hands_controller(self, hands):
-        print(hands)
         if hands == 1:
             pass
         elif hands == 2:
@@ -135,18 +172,6 @@ class PictureOperation(MyMainWindow, operateWindow):
         else:
             self.hands_player.show_camera = False
 
-    def openDir(self):
-        self.hands_player.show_camera = False
-        imgDir = QFileDialog.getExistingDirectory(self,
-                  "选取文件夹",
-                  str(Path.home() / 'Pictures'))
-        files = Path(imgDir).iterdir()
-        for i,v in enumerate(files):
-            self.imgs_path.append(str(v))
-        self.img = cv2.imread(self.imgs_path[0])
-        self.updateImg()
-
- 
     def torch(self):
         pass
 
@@ -159,14 +184,12 @@ class PictureOperation(MyMainWindow, operateWindow):
         if self.count_now > 0:
             self.count_now -=1
         self.img = cv2.imread(self.imgs_path[self.count_now])
-        print(self.count_now)
         self.updateImg()
     
     def move_right(self):
         if self.count_now < len(self.imgs_path) - 1:
             self.count_now +=1
         self.img = cv2.imread(self.imgs_path[self.count_now])
-        print(self.count_now)
         self.updateImg()
     
     def zoom(self):
@@ -194,5 +217,4 @@ class PictureOperation(MyMainWindow, operateWindow):
         screenImg.save(screen_path)
         temp_img = cv2.imread(screen_path)
         cv2.imshow('screen_shot', temp_img)
-        # screenImg.show()
-        
+

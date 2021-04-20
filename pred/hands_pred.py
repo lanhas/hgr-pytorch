@@ -1,6 +1,5 @@
 import torch
 import numpy as np
-from typing import Iterable
 from constants.enum_keys import HG
 from models.hands_recognition_model import HandsRecognitionModel
 from hgdataset.s3_handcraft import BoneLengthAngle
@@ -39,3 +38,4 @@ class HandsPred:
         p_res = self.p_predictor.get_coordinates(img)
         res_dict = self.from_skeleton(p_res[np.newaxis])
         return res_dict
+

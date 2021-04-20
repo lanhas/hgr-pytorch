@@ -1,6 +1,6 @@
 import numpy as np
 import imgaug.augmenters as iaa
-from imgaug.augmentables import Keypoint, KeypointsOnImage, BoundingBox, BoundingBoxesOnImage
+from imgaug.augmentables import KeypointsOnImage, BoundingBoxesOnImage
 
 
 class ResizeKeepRatio:

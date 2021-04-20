@@ -9,7 +9,7 @@ class HandsRecognitionModel(nn.Module):
     def __init__(self, batch):
         super().__init__()
         num_input = len(hand_bones) + 2 * len(hand_bone_pairs) + 21
-        self.num_hidden = 30
+        self.num_hidden = 27
         self.num_output = 10
         self.batch = batch
         self.rnn = LSTM(input_size=num_input, hidden_size=self.num_hidden)
@@ -26,10 +26,10 @@ class HandsRecognitionModel(nn.Module):
 
     def load_ckpt(self, allow_new=True):
         if Path.is_file(self.ckpt_path):
-            if torch.cuda.is_available() is True:
+            if torch.cuda.is_available():
                 checkpoint = torch.load(self.ckpt_path)
             else:
-                checkpoint = torch.load(self.ckpt_path, map_location='cpu')
+                checkpoint = torch.load(self.ckpt_path, map_location=torch.device('cpu'))
             self.load_state_dict(checkpoint)
         else:
             if allow_new:
@@ -38,10 +38,14 @@ class HandsRecognitionModel(nn.Module):
                 raise FileNotFoundError('LSTM ckpt not found.')
     
     def forward(self, x, h, c):
+        if not hasattr(self, '_flattened'):
+            self.rnn.flatten_parameters()
+            setattr(self, '_flattened', True)
+
         # output shape: (seq_len, batch, num_directions * hidden_size)
         lstm_out, (hn, cn) = self.rnn(x, (h, c))
         class_out = self.lin1(lstm_out.view(-1, self.num_hidden))
-        class_out = self.drop(class_out)
+        # class_out = self.drop(class_out)
         return lstm_out, hn, cn, class_out
 
     def h0(self):

@@ -7,6 +7,7 @@ class HK(Enum):
     VISIBILITIES = auto()
     BOXES = auto()
 
+
 class HG(Enum):
     VIDEO_PATH = auto()
     VIDEO_NAME = 'VIDEO_NAME'
