@@ -26,10 +26,14 @@ class HandsRecognitionModel(nn.Module):
 
     def load_ckpt(self, allow_new=True):
         if Path.is_file(self.ckpt_path):
+<<<<<<< HEAD
             if torch.cuda.is_available():
                 checkpoint = torch.load(self.ckpt_path)
             else:
                 checkpoint = torch.load(self.ckpt_path, map_location=torch.device('cpu'))
+=======
+            checkpoint = torch.load(self.ckpt_path)
+>>>>>>> ef0c5965fc5127a9c787ebdbecd55e2fc2996ceb
             self.load_state_dict(checkpoint)
         else:
             if allow_new:

@@ -8,10 +8,15 @@ from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
 from constants.enum_keys import HG
 from models.hands_recognition_model import HandsRecognitionModel
+from torch.optim.lr_scheduler import CosineAnnealingLR
 from hgdataset.s3_handcraft import HgdHandcraft
 from pred.evaluation import EditDistance
 from constants import settings
+<<<<<<< HEAD
 from utils.wswa import wswaUpdate
+=======
+
+>>>>>>> ef0c5965fc5127a9c787ebdbecd55e2fc2996ceb
 from visdom import Visdom
 sys.setrecursionlimit(3000)  # 将默认的递归深度修改为3000
 
@@ -21,16 +26,22 @@ class Trainer:
         self.is_unittest = is_unittest
         self.batch_size = 1
         self.clip_len = -1
+<<<<<<< HEAD
         # self.clip_len = 15 * 90
         hgd_train = HgdHandcraft(Path.home() / 'MeetingHands', True, (512, 512), clip_len=self.clip_len)
         hgd_val = HgdHandcraft(Path.home() / 'MeetingHands', False, (512, 512), clip_len=self.clip_len)
         self.ed = EditDistance()
         self.train_loader = DataLoader(hgd_train, batch_size=self.batch_size, shuffle=True, num_workers=settings.num_workers)
         self.val_loader = DataLoader(hgd_val, batch_size=self.batch_size, shuffle=True, num_workers=settings.num_workers)
+=======
+        hgd = HgdHandcraft(Path.home() / 'MeetingHands', True, (512, 512), clip_len=self.clip_len)
+        self.data_loader = DataLoader(hgd, batch_size=self.batch_size, shuffle=False, num_workers=settings.num_workers)
+>>>>>>> ef0c5965fc5127a9c787ebdbecd55e2fc2996ceb
         self.model = HandsRecognitionModel(batch=self.batch_size)
         self.model.train()
         self.model_folder = Path.cwd() / 'checkpoints'
         self.loss_his_train = []
+<<<<<<< HEAD
         self.epochs = 1000
         self.lr = 0.1
         self.best_acc = 0.7
@@ -63,6 +74,15 @@ class Trainer:
         else:
             return 0.01 * a1
 
+=======
+        self.epochs = 3000
+        self.loss = CrossEntropyLoss()
+        self.opt = optim.Adam(self.model.parameters(), lr=1e-3)
+        self.scheduler = CosineAnnealingLR(self.opt, T_max=self.epochs, eta_min=1e-10)
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.vis = Visdom()
+
+>>>>>>> ef0c5965fc5127a9c787ebdbecd55e2fc2996ceb
     def set_train(self):
         """Convert models to training mode
         """
@@ -76,6 +96,7 @@ class Trainer:
     def train(self):
         self.epoch = 0
         for epoch in range(self.epochs):
+<<<<<<< HEAD
             loss_trained = self.run_epoch(epoch)
             acc_valed = self.val(self.model)
             self.loss_his_train.append(loss_trained)
@@ -146,6 +167,24 @@ class Trainer:
         train_count = 0
         self.set_train()
         for ges_data in self.train_loader:
+=======
+            loss_trained = self.run_epoch()
+            self.loss_his_train.append(loss_trained)
+            self.vis.line([loss_trained.item()], [epoch], win='train_loss', update='append', opts=dict(title='losses'))
+
+            print("Epoch:{}".format(epoch))
+            print("train loss: {}".format(loss_trained))
+            model_path = self.model_folder / Path('lstm_model_epoch_' + str(epoch) + '_trainloss_' + str(round(loss_trained, 2)) + '.pt')
+            if epoch != 0 and epoch % 500 == 0:
+                torch.save(self.model.state_dict(), model_path)
+        self.model.save_ckpt()
+
+    def run_epoch(self):
+        loss_train = torch.tensor(.0).to(self.device)
+        train_count = 0
+        self.set_train()
+        for ges_data in self.data_loader:
+>>>>>>> ef0c5965fc5127a9c787ebdbecd55e2fc2996ceb
             features = torch.cat((ges_data[HG.BONE_LENGTH], ges_data[HG.BONE_ANGLE_COS],
                                     ges_data[HG.BONE_ANGLE_SIN], ges_data[HG.BONE_DEPTH]), dim=2)
             features = features.permute(1, 0, 2)
@@ -162,6 +201,7 @@ class Trainer:
             self.opt.step()
             loss_train += loss_step
             train_count += 1
+<<<<<<< HEAD
             # self.scheduler.step()
             self.adjust_learning_rate(self.opt, epoch)
         loss_trained = loss_train.cpu().detach().numpy() / train_count
@@ -193,6 +233,12 @@ class Trainer:
             (N, S, D, I), accuracy, sumDistence = self.ed.getAccuracy(r_hands, target, sumDistence)
         sum_accuracy = (sumDistence[0] - sumDistence[1] - sumDistence[2] - sumDistence[3]) / sumDistence[0]
         return sum_accuracy
+=======
+            self.scheduler.step()
+        
+        loss_trained = loss_train.cpu().detach().numpy() / train_count
+        return loss_trained
+>>>>>>> ef0c5965fc5127a9c787ebdbecd55e2fc2996ceb
 
 
 if __name__ == "__main__":
