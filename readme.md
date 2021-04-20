@@ -17,8 +17,6 @@ This is a pytorch deep learning project that recognizes 9 kinds of hands command
 
 [百度网盘](https://pan.baidu.com/s/1YOuGTDUlzsr9DypBevch9A )  提取码：06ek
 
-[百度网盘](https://pan.baidu.com/s/1b72F7haVz_-d6SnzYUVJfA )  提取码：rxm6
-
 放置在:
 
 ```
@@ -34,8 +32,6 @@ hgr-pytorch/generated
 [Nutstore 坚果云](https://www.jianguoyun.com/p/Dc1XE3EQiZCuCRjIoOsD )
 
 [百度网盘](https://pan.baidu.com/s/1QyrOQn4GRVV2or5_D5iaYQ )  提取码：eyty
-
-[百度网盘](https://pan.baidu.com/s/1DFJNiXyye12AHnofO10saQ )  提取码：n6b3
 
 放置在：
 ```
