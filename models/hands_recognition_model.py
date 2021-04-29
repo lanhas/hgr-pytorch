@@ -30,7 +30,6 @@ class HandsRecognitionModel(nn.Module):
                 checkpoint = torch.load(self.ckpt_path)
             else:
                 checkpoint = torch.load(self.ckpt_path, map_location=torch.device('cpu'))
-            checkpoint = torch.load(self.ckpt_path)
             self.load_state_dict(checkpoint)
         else:
             if allow_new:
