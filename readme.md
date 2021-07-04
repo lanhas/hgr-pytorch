@@ -54,6 +54,9 @@ hgr-pytorch/generated
 ```bash
 # Python 3.7.7
 conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=10.2 -c pytorch
+# cpu 版本
+# conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cpuonly -c pytorch
+# pip install torch==1.7.1+cpu torchvision==0.8.2+cpu torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
 pip install pyqt5
 pip install mediapipe
 pip install visdom opencv-python imgaug pillow pywin32
