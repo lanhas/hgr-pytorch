@@ -7,8 +7,8 @@ from constants.keypoints import hand_bones, hand_bone_pairs
 
 class HgdHandcraft(HgdTruncate):
     """Return handcrafted features: bone length and angle"""
-    def __init__(self, data_path: Path, is_train: bool, resize_img_size: tuple, clip_len: int):
-        super().__init__(data_path, is_train, resize_img_size, clip_len)
+    def __init__(self, mode, data_path: Path, is_train: bool, resize_img_size: tuple, clip_len: int):
+        super().__init__(mode, data_path, is_train, resize_img_size, clip_len)
         self.bla = BoneLengthAngle()
 
     def __getitem__(self, index):

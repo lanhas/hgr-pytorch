@@ -357,11 +357,11 @@ def overlap_similarity(box, other_boxes):
 if __name__ == '__main__':
 	m = PalmDetector()
 	import coremltools as ct
-	m.load_weights("./palmdetector.pth")
-	m.load_anchors('./anchors.npy')
+	m.load_weights("./checkpoints/palmdetector.pth")
+	m.load_anchors('./checkpoints/anchors.npy')
 	m.eval()
 
-	img = cv2.imread('./hands.jpg')
+	img = cv2.imread('./checkpoints/hands.jpg')
 	img = cv2.resize(img,(256,256))
 	result = m.predict_on_image(img)
 	print(result)

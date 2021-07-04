@@ -2,18 +2,23 @@ import torch
 import numpy as np
 from constants.enum_keys import HG
 from models.hands_recognition_model import HandsRecognitionModel
+from models.static_recognition_model import StaticRecognitionModel
 from hgdataset.s3_handcraft import BoneLengthAngle
 from pred.hands_keypoint_pred import HandsKeypointPredict
 
 
 class HandsPred:
-    def __init__(self):
+    def __init__(self, mode):
+        self.mode = mode
         self.p_predictor = HandsKeypointPredict()
         self.bla = BoneLengthAngle()
-        self.h_model = HandsRecognitionModel(1)
+        if self.mode == "dynamic":
+            self.h_model = HandsRecognitionModel(1)
+            self.h, self.c = self.h_model.h0(), self.h_model.c0()
+        else:
+            self.h_model = StaticRecognitionModel()
         self.h_model.load_ckpt()
         self.h_model.eval()
-        self.h, self.c = self.h_model.h0(), self.h_model.c0()
 
     def from_skeleton(self, coord_norm):
         assert coord_norm.ndim == 3 and coord_norm.shape[0] == 1
@@ -25,8 +30,11 @@ class HandsPred:
         features = torch.from_numpy(features)
         features = features.to(self.h_model.device, dtype=torch.float32)
         with torch.no_grad():
-            _, h, c, class_out = self.h_model(features, self.h, self.c)
-        self.h, self.c = h, c
+            if self.mode == "dynamic":
+                _, h, c, class_out = self.h_model(features, self.h, self.c)
+                self.h, self.c = h, c
+            else:
+                class_out = self.h_model(features)
         np_out = class_out[0].cpu().numpy()
         max_arg = np.argmax(np_out)
         res_dict = {HG.OUT_ARGMAX: max_arg, HG.OUT_SCORES: np_out, HG.COORD: coord_norm}

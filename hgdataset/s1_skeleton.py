@@ -11,15 +11,15 @@ from constants.enum_keys import HG
 
 class HgdSkeleton(HgdLabel):
     """Load coords from disk if exists, else predict coords."""
-    def __init__(self, data_path: Path, is_train: bool, resize_img_size: tuple):
-        super().__init__(data_path, is_train)
+    def __init__(self, mode, data_path: Path, is_train: bool, resize_img_size: tuple):
+        super().__init__(mode, data_path, is_train)
         self.resize_img_size = resize_img_size
         if is_train:
-            self.coord_folder = Path('generated/coords/train')
-            self.video_folder = data_path / 'train'
+            self.coord_folder = Path('generated/coords/' + str(self.mode) +'/train')
+            self.video_folder = data_path / Path(str(self.mode) + '/train')
         else:
-            self.coord_folder = Path('generated/coords/test')
-            self.video_folder = data_path / 'test'
+            self.coord_folder = Path('generated/coords/' + str(self.mode) +'/test')
+            self.video_folder = data_path / Path(str(self.mode) + '/test')
         self.coord_folder.mkdir(parents=True, exist_ok=True)
         self.predictor = None
 

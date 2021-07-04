@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow,QFileDialog
+from PyQt5.QtWidgets import QApplication
 from controller.controller import Controller
 
 

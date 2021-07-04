@@ -7,13 +7,13 @@ from constants.enum_keys import HG
 
 
 class HgdLabel(Dataset):
-    def __init__(self, data_path, is_train):
+    def __init__(self, mode, data_path, is_train):
         self.is_train = is_train
-
+        self.mode = mode
         if is_train:
-            root: Path = data_path / 'train'
+            root: Path = data_path / str(self.mode) / 'train'
         else:
-            root: Path = data_path / 'test'
+            root: Path = data_path / str(self.mode) / 'test'
 
         if not root.exists():
             raise FileNotFoundError(str(root), 'not found.')

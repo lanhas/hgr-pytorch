@@ -1,11 +1,9 @@
-import sys
-sys.path.append(r'F:\code\copy\hgr-pytorch')
 import argparse
 from pathlib import Path
 import hgdataset.s1_skeleton
-import train.train_hands_gesture_model
+import train.train_dynamic_hands_model
 import pred.prepare_skeleton_from_video
-import pred.play_hands_results
+import pred.play_dynamic_hands_results
 import pred.evaluation
 
 
@@ -33,18 +31,18 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     if args.train_hands:
-        train.train_hands_gesture_model.Trainer().train()
+        train.train_dynamic_hands_model.Trainer().train()
     elif args.clean_saved_skeleton:
         hgdataset.s1_skeleton.HgdSkeleton.remove_generated_skeletons()
     elif args.play_hands is not None:
         prepare_skeleton()
-        pred.play_hands_results.Player().play_dataset_video(is_train=False, video_index=args.play_hands)
+        pred.play_dynamic_hands_results.Player().play_dataset_video(is_train=False, video_index=args.play_hands)
     elif args.play is not None:
         video_path = args.play
         if not Path(video_path).is_file():
             raise FileNotFoundError(video_path, ' is not a file')
-        pred.play_hands_results.Player().play_custom_video(video_path)
+        pred.play_dynamic_hands_results.Player().play_custom_video(video_path)
     elif args.play_realtime:
-        pred.play_hands_results.Player().play_custom_video(None)
+        pred.play_dynamic_hands_results.Player().play_custom_video(None)
     elif args.eval:
         pred.evaluation.Eval().main()

@@ -4,15 +4,20 @@ import numpy as np
 from itertools import groupby
 from constants.enum_keys import HG
 from hgdataset.s0_label import HgdLabel
-from pred.play_hands_results import Player
+from pred.play_dynamic_hands_results import Player as DynamicPlayer
+from pred.play_static_hands_results import Player as StaticPlayer
 
 
 class Eval:
-    def __init__(self):
-        self.player = Player()
+    def __init__(self, mode):
+        self.mode = mode
+        if self.mode == 'dynamic':
+            self.player = DynamicPlayer()
+        else:
+            self.player = StaticPlayer()
         models_dir = Path.cwd() / 'checkpoints'
         self.models_path = models_dir.iterdir()
-        self.num_video = len(HgdLabel(Path.home() / 'MeetingHands', is_train=False))
+        self.num_video = len(HgdLabel(self.mode, Path.home() / 'MeetingHands' , is_train=False))
         self.ed = EditDistance()
 
     def main(self):

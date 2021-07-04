@@ -1,19 +1,31 @@
 # 动态手势识别及控制系统
-This is a pytorch deep learning project that recognizes 9 kinds of hands commanding gestures.
+This is a pytorch deep learning project that recognizes 9 kinds of dynamic hands and 11 static hands commanding gestures.
 
-识别9种基本手势的Pytorch深度学习项目
+识别9种基本动态手势和11种静态手势的Pytorch深度学习项目
+包括：
+会商演示系统
+手部康复系统
 
 <p align="center">
-    <img src="docs/intro.gif" width="480">
+    <img src="envs/docs/intro.gif" width="480">
 </p>
 
+<p align="center">
+    <img src="envs/docs/hrm.gif" width="480">
+</p>
+
+<p align="center">
+    <img src="envs/docs/game_snakes.gif" width="480">
+</p>
+
+<p align="center">
+    <img src="envs/docs/game_teries.gif" width="480">
+</p>
 
 ## 安装
 
 ### 下载模型参数文件`checkpoint`和生成的骨架`generated`
 下载地址：
-
-[Nutstore 坚果云](https://www.jianguoyun.com/p/DQrBFs8QjpCuCRjOoOsD )
 
 [百度网盘](https://pan.baidu.com/s/1YOuGTDUlzsr9DypBevch9A )  提取码：06ek
 
@@ -25,11 +37,9 @@ hgr-pytorch/generated
 ```
 
 
-### 下载手势数据集（必选）
+### 下载手势数据集
 
-动态手势数据集下载：
-
-[Nutstore 坚果云](https://www.jianguoyun.com/p/Dc1XE3EQiZCuCRjIoOsD )
+手势数据集下载：
 
 [百度网盘](https://pan.baidu.com/s/1QyrOQn4GRVV2or5_D5iaYQ )  提取码：eyty
 
